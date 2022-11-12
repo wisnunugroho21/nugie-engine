@@ -35,4 +35,8 @@ namespace nugiEngine {
       throw std::runtime_error("failed to create window surface");
     }
   }
+
+  VkExtent2D EngineWindow::getExtent() {
+    return { static_cast<uint32_t>(this->width), static_cast<uint32_t>(this->height) };
+  }
 }

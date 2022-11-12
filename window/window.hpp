@@ -18,7 +18,9 @@ namespace nugiEngine {
 
 			bool shouldClose();
 			void pollEvents();
+
 			void createWindowSurface(VkInstance instance, VkSurfaceKHR* surface);
+			VkExtent2D getExtent();
 
 		private:
 			const int width;

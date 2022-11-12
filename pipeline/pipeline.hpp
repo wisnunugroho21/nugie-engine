@@ -13,7 +13,6 @@ namespace nugiEngine {
 		VkRenderPass renderPass = nullptr;
 		uint32_t subpass = 0;
 
-		VkPipelineViewportStateCreateInfo viewportInfo;
 		VkPipelineInputAssemblyStateCreateInfo inputAssemblyInfo;
 		VkPipelineRasterizationStateCreateInfo rasterizationInfo;
 		VkPipelineMultisampleStateCreateInfo multisampleInfo;
