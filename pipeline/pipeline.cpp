@@ -14,6 +14,10 @@ namespace nugiEngine {
 		this->createGraphicPipeline(vertFilePath, fragFilePath, configInfo);
 	}
 
+	EnginePipeline::~EnginePipeline() {
+
+	}
+
 	std::vector<char> EnginePipeline::readFile(const std::string& filepath) {
 		std::ifstream file{filepath, std::ios::ate | std::ios::binary};
 

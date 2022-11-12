@@ -2,8 +2,7 @@
 
 namespace nugiEngine {
     void EngineApp::run() {
-        while (!this->window.shouldClose())
-        {
+        while (!this->window.shouldClose()) {
             this->window.pollEvents();
         }
     }
