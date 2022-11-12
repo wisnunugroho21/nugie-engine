@@ -16,7 +16,7 @@ namespace nugiEngine {
 		private:
 			EngineWindow window{WIDTH, HEIGHT, "Testing vulkan"};
 			EngineDevice device{window};
-			EnginePipeline pipeline{"shaders/simple_shader.frag.spv", "shaders/simple_shader.vert.spv"};
+			EnginePipeline pipeline{"bin/shaders/simple_shader.frag.spv", "bin/shaders/simple_shader.vert.spv"};
 	};
 	
 }
