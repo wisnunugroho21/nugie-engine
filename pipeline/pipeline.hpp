@@ -6,9 +6,20 @@
 #include "../device/device.hpp"
 
 namespace nugiEngine {
-	struct PipelineConfigInfo
-	{
-		/* data */
+	struct PipelineConfigInfo {
+		VkViewport viewport;
+		VkRect2D scissor;
+		VkPipelineLayout pipelineLayout = nullptr;
+		VkRenderPass renderPass = nullptr;
+		uint32_t subpass = 0;
+
+		VkPipelineViewportStateCreateInfo viewportInfo;
+		VkPipelineInputAssemblyStateCreateInfo inputAssemblyInfo;
+		VkPipelineRasterizationStateCreateInfo rasterizationInfo;
+		VkPipelineMultisampleStateCreateInfo multisampleInfo;
+		VkPipelineColorBlendAttachmentState colorBlendAttachment;
+		VkPipelineColorBlendStateCreateInfo colorBlendInfo;
+		VkPipelineDepthStencilStateCreateInfo depthStencilInfo;
 	};
 	
 	class EnginePipeline
