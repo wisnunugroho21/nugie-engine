@@ -12,6 +12,7 @@
 *.ilk
 *.map
 *.exp
+*.spv
 
 # Precompiled Headers
 *.gch
