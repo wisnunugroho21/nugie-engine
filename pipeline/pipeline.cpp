@@ -50,20 +50,21 @@ namespace nugiEngine {
 
 		VkPipelineShaderStageCreateInfo shaderStagesInfos[2];
 
-		for (auto& shaderStagesInfo : shaderStagesInfos)
-		{
-			shaderStagesInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
-			shaderStagesInfo.pName = "main";
-			shaderStagesInfo.flags = 0;
-			shaderStagesInfo.pNext = nullptr;
-			shaderStagesInfo.pSpecializationInfo = nullptr;
-		}
-
+		shaderStagesInfos[0].sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
 		shaderStagesInfos[0].stage = VK_SHADER_STAGE_VERTEX_BIT;
 		shaderStagesInfos[0].module = this->vertShaderModule;
+		shaderStagesInfos[0].pName = "main";
+		shaderStagesInfos[0].flags = 0;
+		shaderStagesInfos[0].pNext = nullptr;
+		shaderStagesInfos[0].pSpecializationInfo = nullptr;
 
+		shaderStagesInfos[1].sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
 		shaderStagesInfos[1].stage = VK_SHADER_STAGE_FRAGMENT_BIT;
 		shaderStagesInfos[1].module = this->fragShaderModule;
+		shaderStagesInfos[1].pName = "main";
+		shaderStagesInfos[1].flags = 0;
+		shaderStagesInfos[1].pNext = nullptr;
+		shaderStagesInfos[1].pSpecializationInfo = nullptr;
 
 		VkPipelineVertexInputStateCreateInfo vertexInputInfo{};
 		vertexInputInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
