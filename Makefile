@@ -2,7 +2,7 @@ CFLAGS = -std=c++17 -O2
 LDFLAGS = -lglfw -lvulkan -ldl -lpthread -lX11 -lXxf86vm -lXrandr -lXi
 
 Engine: *.cpp */*.cpp */*.hpp
-	g++ $(CFLAGS) -o engine.out *.cpp */*.cpp $(LDFLAGS)
+	g++ $(CFLAGS) -o bin/engine.out *.cpp */*.cpp $(LDFLAGS)
 
 .PHONY: test clean
 
