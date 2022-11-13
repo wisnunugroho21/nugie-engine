@@ -20,6 +20,8 @@ namespace nugiEngine {
 				this->window.pollEvents();
 				this->drawFrame();
 			}
+
+			vkDeviceWaitIdle(this->device);
     }
 
     void EngineApp::createPipelineLayout() {
