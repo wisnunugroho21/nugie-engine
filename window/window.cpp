@@ -38,6 +38,10 @@ namespace nugiEngine {
     }
   }
 
+  void EngineWindow::resetResizedFlag() {
+    this->frameBufferResized = false;
+  }
+
   VkExtent2D EngineWindow::getExtent() {
     return { static_cast<uint32_t>(this->width), static_cast<uint32_t>(this->height) };
   }
