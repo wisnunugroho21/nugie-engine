@@ -66,6 +66,8 @@ namespace nugiEngine {
 				this->createCommandBuffers();
 			}
 		}
+
+		this->createPipeline();
 	}
 
 	void EngineApp::createPipeline() {
