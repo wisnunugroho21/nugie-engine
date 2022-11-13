@@ -21,7 +21,7 @@ namespace nugiEngine {
 				this->drawFrame();
 			}
 
-			vkDeviceWaitIdle(this->device);
+			vkDeviceWaitIdle(this->device.device());
     }
 
     void EngineApp::createPipelineLayout() {
