@@ -7,8 +7,6 @@
 
 namespace nugiEngine {
 	struct PipelineConfigInfo {
-		VkViewport viewport;
-		VkRect2D scissor;
 		VkPipelineLayout pipelineLayout = nullptr;
 		VkRenderPass renderPass = nullptr;
 		uint32_t subpass = 0;
@@ -19,6 +17,8 @@ namespace nugiEngine {
 		VkPipelineColorBlendAttachmentState colorBlendAttachment;
 		VkPipelineColorBlendStateCreateInfo colorBlendInfo;
 		VkPipelineDepthStencilStateCreateInfo depthStencilInfo;
+		std::vector<VkDynamicState> dynamicStateEnables;
+		VkPipelineDynamicStateCreateInfo dynamicStateInfo;
 	};
 	
 	class EnginePipeline
@@ -36,7 +36,7 @@ namespace nugiEngine {
 			EnginePipeline& operator =(const EngineDevice&) = delete;
 
 			void bind(VkCommandBuffer commandBuffer);
-			static PipelineConfigInfo defaultPipelineConfigInfo(uint32_t width, uint32_t height);
+			static void defaultPipelineConfigInfo(PipelineConfigInfo& configInfo);
 
 		private:
 			EngineDevice& engineDevice;

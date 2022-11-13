@@ -8,7 +8,7 @@ namespace nugiEngine {
     EngineApp::EngineApp() {
 			this->loadModels();
 			this->createPipelineLayout();
-			this->createPipeline();
+			this->recreateSwapChain();
 			this->createCommandBuffers();
     }
 
@@ -48,9 +48,30 @@ namespace nugiEngine {
 			}
     }
 
+	void EngineApp::recreateSwapChain() {
+		auto extent = this->window.getExtent();
+		while(extent.width == 0 || extent.height == 0) {
+			extent = this->window.getExtent();
+			glfwWaitEvents();
+		}
+
+		vkDeviceWaitIdle(this->device.device());
+
+		if (this->swapChain == nullptr) {
+			this->swapChain = std::make_unique<EngineSwapChain>(this->device, extent);
+		} else {
+			this->swapChain = std::make_unique<EngineSwapChain>(this->device, extent, std::move(this->swapChain));
+		}
+	}
+
     void EngineApp::createPipeline() {
-			auto pipelineConfig = EnginePipeline::defaultPipelineConfigInfo(this->WIDTH, this->HEIGHT);
-			pipelineConfig.renderPass = this->swapChain.getRenderPass();
+			assert(this->swapChain != nullptr && "Cannot create pipeline before swap chain");
+			assert(this->pipelineLayout != nullptr && "Cannot create pipeline before pipeline layout");
+
+			PipelineConfigInfo pipelineConfig{};
+			EnginePipeline::defaultPipelineConfigInfo(pipelineConfig);
+
+			pipelineConfig.renderPass = this->swapChain->getRenderPass();
 			pipelineConfig.pipelineLayout = this->pipelineLayout;
 
 			this->pipeline = std::make_unique<EnginePipeline>(
@@ -62,7 +83,7 @@ namespace nugiEngine {
     }
 
     void EngineApp::createCommandBuffers() {
-			this->commandBuffers.resize(this->swapChain.imageCount());
+			this->commandBuffers.resize(this->swapChain->imageCount());
 
 			VkCommandBufferAllocateInfo allocInfo{};
 			allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
@@ -84,11 +105,11 @@ namespace nugiEngine {
 
 				VkRenderPassBeginInfo renderBeginInfo{};
 				renderBeginInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-				renderBeginInfo.renderPass = this->swapChain.getRenderPass();
-				renderBeginInfo.framebuffer = this->swapChain.getFrameBuffer(i);
+				renderBeginInfo.renderPass = this->swapChain->getRenderPass();
+				renderBeginInfo.framebuffer = this->swapChain->getFrameBuffer(i);
 
 				renderBeginInfo.renderArea.offset = {0, 0};
-				renderBeginInfo.renderArea.extent = this->swapChain.getSwapChainExtent();
+				renderBeginInfo.renderArea.extent = this->swapChain->getSwapChainExtent();
 
 				std::array<VkClearValue, 2> clearValues{};
 				clearValues[0].color = {0.1f, 0.1f, 0.1f, 1.0f};
@@ -111,13 +132,13 @@ namespace nugiEngine {
     
     void EngineApp::drawFrame() {
 			uint32_t imageIndex;
-			auto result = this->swapChain.acquireNextImage(&imageIndex);
+			auto result = this->swapChain->acquireNextImage(&imageIndex);
 
 			if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR) {
 				throw std::runtime_error("failed to acquire swap chain image");
 			}
 
-			result = this->swapChain.submitCommandBuffers(&this->commandBuffers[imageIndex], &imageIndex);
+			result = this->swapChain->submitCommandBuffers(&this->commandBuffers[imageIndex], &imageIndex);
 			if (result != VK_SUCCESS) {
 				throw std::runtime_error("failed to present swap chain image");
 			}

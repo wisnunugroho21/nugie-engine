@@ -12,9 +12,11 @@ namespace nugiEngine {
   void EngineWindow::init() {
     glfwInit();
     glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-    glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+    glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
 
     this->window = glfwCreateWindow(this->width, this->height, this->name.c_str(), nullptr, nullptr);
+    glfwSetWindowUserPointer(this->window, this);
+    glfwSetFramebufferSizeCallback(this->window, this->frameBufferResizedCallback);
   }
 
   void EngineWindow::destroy() {
@@ -38,5 +40,12 @@ namespace nugiEngine {
 
   VkExtent2D EngineWindow::getExtent() {
     return { static_cast<uint32_t>(this->width), static_cast<uint32_t>(this->height) };
+  }
+
+  void EngineWindow::frameBufferResizedCallback(GLFWwindow *window, int width, int height) {
+    auto currentWindow = reinterpret_cast<EngineWindow*>(glfwGetWindowUserPointer(window));
+    currentWindow->frameBufferResized = false;
+    currentWindow->width;
+    currentWindow->height;
   }
 }

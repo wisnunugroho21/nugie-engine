@@ -21,15 +21,19 @@ namespace nugiEngine {
 
 			void createWindowSurface(VkInstance instance, VkSurfaceKHR* surface);
 			VkExtent2D getExtent();
+			void resetResizedFlag();
+			bool wasResized();
 
 		private:
-			const int width;
-			const int height;
+			int width;
+			int height;
+			bool frameBufferResized = false;
 
 			std::string name;
 			GLFWwindow *window;
 
 			void init();
 			void destroy();
+			static void frameBufferResizedCallback(GLFWwindow *window, int width, int height);
 	};
 }

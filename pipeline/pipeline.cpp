@@ -81,9 +81,9 @@ namespace nugiEngine {
 		VkPipelineViewportStateCreateInfo viewportInfo{};
 		viewportInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;
 		viewportInfo.viewportCount = 1;
-		viewportInfo.pViewports = &configInfo.viewport;
+		viewportInfo.pViewports = nullptr;
 		viewportInfo.scissorCount = 1;
-		viewportInfo.pScissors = &configInfo.scissor;
+		viewportInfo.pScissors = nullptr;
 
 		VkGraphicsPipelineCreateInfo pipelineInfo{};
 		pipelineInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
@@ -96,7 +96,7 @@ namespace nugiEngine {
 		pipelineInfo.pMultisampleState = &configInfo.multisampleInfo;
 		pipelineInfo.pColorBlendState = &configInfo.colorBlendInfo;
 		pipelineInfo.pDepthStencilState = &configInfo.depthStencilInfo;
-		pipelineInfo.pDynamicState = nullptr;
+		pipelineInfo.pDynamicState = &configInfo.dynamicStateInfo;
 
 		pipelineInfo.layout = configInfo.pipelineLayout;
 		pipelineInfo.renderPass = configInfo.renderPass;
@@ -125,22 +125,10 @@ namespace nugiEngine {
 		vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, this->graphicPipeline);
 	}
 
-	PipelineConfigInfo EnginePipeline::defaultPipelineConfigInfo(uint32_t width, uint32_t height) {
-		PipelineConfigInfo configInfo{};
- 
+	void EnginePipeline::defaultPipelineConfigInfo(PipelineConfigInfo& configInfo) {
 		configInfo.inputAssemblyInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
 		configInfo.inputAssemblyInfo.topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
 		configInfo.inputAssemblyInfo.primitiveRestartEnable = VK_FALSE;
-		
-		configInfo.viewport.x = 0.0f;
-		configInfo.viewport.y = 0.0f;
-		configInfo.viewport.width = static_cast<float>(width);
-		configInfo.viewport.height = static_cast<float>(height);
-		configInfo.viewport.minDepth = 0.0f;
-		configInfo.viewport.maxDepth = 1.0f;
-		
-		configInfo.scissor.offset = {0, 0};
-		configInfo.scissor.extent = {width, height};
 		
 		configInfo.rasterizationInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
 		configInfo.rasterizationInfo.depthClampEnable = VK_FALSE;
@@ -193,7 +181,5 @@ namespace nugiEngine {
 		configInfo.depthStencilInfo.stencilTestEnable = VK_FALSE;
 		configInfo.depthStencilInfo.front = {};  // Optional
 		configInfo.depthStencilInfo.back = {};   // Optional
-
-		return configInfo;
 	}
 } // namespace nugiEngine

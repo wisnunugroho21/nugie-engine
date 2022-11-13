@@ -12,13 +12,14 @@
 namespace nugiEngine {
 
 EngineSwapChain::EngineSwapChain(EngineDevice &deviceRef, VkExtent2D extent)
-    : device{deviceRef}, windowExtent{extent} {
-  createSwapChain();
-  createImageViews();
-  createRenderPass();
-  createDepthResources();
-  createFramebuffers();
-  createSyncObjects();
+  : device{deviceRef}, windowExtent{extent} {
+    this->init();
+}
+
+EngineSwapChain::EngineSwapChain(EngineDevice &deviceRef, VkExtent2D extent, std::shared_ptr<EngineSwapChain> previous) 
+  : device{deviceRef}, windowExtent{extent}, oldSwapChain{previous}  {
+    this->init();
+    this->oldSwapChain = nullptr;
 }
 
 EngineSwapChain::~EngineSwapChain() {
@@ -119,6 +120,15 @@ VkResult EngineSwapChain::submitCommandBuffers(
   return result;
 }
 
+void EngineSwapChain::init() {
+  createSwapChain();
+  createImageViews();
+  createRenderPass();
+  createDepthResources();
+  createFramebuffers();
+  createSyncObjects();
+}
+
 void EngineSwapChain::createSwapChain() {
   SwapChainSupportDetails swapChainSupport = device.getSwapChainSupport();
 
@@ -162,7 +172,7 @@ void EngineSwapChain::createSwapChain() {
   createInfo.presentMode = presentMode;
   createInfo.clipped = VK_TRUE;
 
-  createInfo.oldSwapchain = VK_NULL_HANDLE;
+  createInfo.oldSwapchain = this->oldSwapChain == nullptr ? VK_NULL_HANDLE : this->oldSwapChain->swapChain;
 
   if (vkCreateSwapchainKHR(device.device(), &createInfo, nullptr, &swapChain) != VK_SUCCESS) {
     throw std::runtime_error("failed to create swap chain!");

@@ -29,11 +29,14 @@ namespace nugiEngine {
 			void createPipelineLayout();
 			void createPipeline();
 			void createCommandBuffers();
+			void freeCommandBuffers();
 			void drawFrame();
+			void recreateSwapChain();
+			void recordCommandBuffer(int imageIndex);
 
 			EngineWindow window{WIDTH, HEIGHT, "Testing vulkan"};
 			EngineDevice device{window};
-			EngineSwapChain swapChain{device, window.getExtent()};
+			std::unique_ptr<EngineSwapChain> swapChain;
 			VkPipelineLayout pipelineLayout;
 			std::unique_ptr<EnginePipeline> pipeline;
 			std::vector<VkCommandBuffer> commandBuffers;
