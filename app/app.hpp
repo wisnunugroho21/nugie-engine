@@ -4,6 +4,7 @@
 #include "../device/device.hpp"
 #include "../pipeline/pipeline.hpp"
 #include "../swap_chain/swap_chain.hpp"
+#include "../model/model.hpp"
 
 #include <memory>
 #include <vector>
@@ -24,6 +25,7 @@ namespace nugiEngine {
 			void run();
 
 		private:
+			void loadModels();
 			void createPipelineLayout();
 			void createPipeline();
 			void createCommandBuffers();
@@ -35,5 +37,6 @@ namespace nugiEngine {
 			VkPipelineLayout pipelineLayout;
 			std::unique_ptr<EnginePipeline> pipeline;
 			std::vector<VkCommandBuffer> commandBuffers;
+			std::unique_ptr<EngineModel> model;
 	};
 }

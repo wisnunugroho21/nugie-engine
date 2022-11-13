@@ -6,6 +6,7 @@
 namespace nugiEngine {
 
     EngineApp::EngineApp() {
+			this->loadModels();
 			this->createPipelineLayout();
 			this->createPipeline();
 			this->createCommandBuffers();
@@ -23,6 +24,16 @@ namespace nugiEngine {
 
 			vkDeviceWaitIdle(this->device.device());
     }
+
+	void EngineApp::loadModels() {
+		std::vector<Vertex> vertices {
+			{{ 0.0f, -0.5f }},
+			{{ 0.5f, 0.5f }},
+			{{ -0.5f, 0.0f }}
+		};
+
+		this->model = std::make_unique<EngineModel>(this->device, vertices); 
+	}
 
     void EngineApp::createPipelineLayout() {
 			VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
@@ -88,7 +99,8 @@ namespace nugiEngine {
 				vkCmdBeginRenderPass(this->commandBuffers[i], &renderBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
 
 				pipeline->bind(this->commandBuffers[i]);
-				vkCmdDraw(this->commandBuffers[i], 3, 1, 0, 0);
+				model->bind(this->commandBuffers[i]);
+				model->draw(this->commandBuffers[i]);
 
 				vkCmdEndRenderPass(this->commandBuffers[i]);
 				if (vkEndCommandBuffer(this->commandBuffers[i]) != VK_SUCCESS) {
