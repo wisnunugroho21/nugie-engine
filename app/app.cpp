@@ -100,40 +100,6 @@ namespace nugiEngine {
 		if (vkAllocateCommandBuffers(this->device.device(), &allocInfo, this->commandBuffers.data()) != VK_SUCCESS) {
 			throw std::runtime_error("failed to allocate command buffer");
 		}
-
-		for (int i = 0; i < this->commandBuffers.size(); i++) {
-			VkCommandBufferBeginInfo commandBeginInfo{};
-			commandBeginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
-
-			if (vkBeginCommandBuffer(this->commandBuffers[i], &commandBeginInfo) != VK_SUCCESS) {
-				throw std::runtime_error("failed to begin command buffer " + i);
-			}
-
-			VkRenderPassBeginInfo renderBeginInfo{};
-			renderBeginInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-			renderBeginInfo.renderPass = this->swapChain->getRenderPass();
-			renderBeginInfo.framebuffer = this->swapChain->getFrameBuffer(i);
-
-			renderBeginInfo.renderArea.offset = {0, 0};
-			renderBeginInfo.renderArea.extent = this->swapChain->getSwapChainExtent();
-
-			std::array<VkClearValue, 2> clearValues{};
-			clearValues[0].color = {0.1f, 0.1f, 0.1f, 1.0f};
-			clearValues[1].depthStencil = {1.0f, 0};
-			renderBeginInfo.clearValueCount = static_cast<uint32_t>(clearValues.size());
-			renderBeginInfo.pClearValues = clearValues.data();
-
-			vkCmdBeginRenderPass(this->commandBuffers[i], &renderBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
-
-			pipeline->bind(this->commandBuffers[i]);
-			model->bind(this->commandBuffers[i]);
-			model->draw(this->commandBuffers[i]);
-
-			vkCmdEndRenderPass(this->commandBuffers[i]);
-			if (vkEndCommandBuffer(this->commandBuffers[i]) != VK_SUCCESS) {
-				throw std::runtime_error("failed to record command buffer");
-			}
-		}
 	}
 
 	void EngineApp::freeCommandBuffers() {
@@ -146,7 +112,7 @@ namespace nugiEngine {
 		commandBeginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
 
 		if (vkBeginCommandBuffer(this->commandBuffers[imageIndex], &commandBeginInfo) != VK_SUCCESS) {
-			throw std::runtime_error("failed to begin command buffer " + imageIndex);
+			throw std::runtime_error("failed to begin recording command buffer " + imageIndex);
 		}
 
 		VkRenderPassBeginInfo renderBeginInfo{};
@@ -164,6 +130,18 @@ namespace nugiEngine {
 		renderBeginInfo.pClearValues = clearValues.data();
 
 		vkCmdBeginRenderPass(this->commandBuffers[imageIndex], &renderBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
+
+		VkViewport viewport{};
+		viewport.x = 0.0f;
+		viewport.y = 0.0f;
+		viewport.width = static_cast<uint32_t>(this->swapChain->getSwapChainExtent().width);
+		viewport.height = static_cast<uint32_t>(this->swapChain->getSwapChainExtent().height);
+		viewport.minDepth = 0.0f;
+		viewport.maxDepth = 1.0f;
+
+		VkRect2D scissor{{0, 0}, this->swapChain->getSwapChainExtent()};
+		vkCmdSetViewport(this->commandBuffers[imageIndex], 0, 1, &viewport);
+		vkCmdSetScissor(this->commandBuffers[imageIndex], 0, 1, &scissor);
 
 		pipeline->bind(this->commandBuffers[imageIndex]);
 		model->bind(this->commandBuffers[imageIndex]);
