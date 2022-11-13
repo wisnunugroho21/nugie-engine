@@ -1,5 +1,7 @@
 #include "model.hpp"
 
+#include <cstring>
+
 namespace nugiEngine
 {
     EngineModel::EngineModel(EngineDevice &device, const std::vector<Vertex> vertices) : engineDevice{device} {
