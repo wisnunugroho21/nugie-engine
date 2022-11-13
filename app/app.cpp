@@ -27,9 +27,9 @@ namespace nugiEngine {
 
 	void EngineApp::loadModels() {
 		std::vector<Vertex> vertices {
-			{{ 0.0f, -0.5f }},
-			{{ 0.5f, 0.5f }},
-			{{ -0.5f, 0.5f }}
+			{{ 0.0f, -0.5f }, {1.0f, 0.0f, 0.0f}},
+			{{ 0.5f, 0.5f }, {0.0f, 1.0f, 0.0f}},
+			{{ -0.5f, 0.5f }, {0.0f, 0.0f, 1.0f}}
 		};
 
 		this->model = std::make_unique<EngineModel>(this->device, vertices); 
