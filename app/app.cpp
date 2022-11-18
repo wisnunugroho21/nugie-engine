@@ -5,25 +5,25 @@
 
 namespace nugiEngine {
 
-    EngineApp::EngineApp() {
-			this->loadModels();
-			this->createPipelineLayout();
-			this->recreateSwapChain();
-			this->createCommandBuffers();
-    }
+	EngineApp::EngineApp() {
+		this->loadModels();
+		this->createPipelineLayout();
+		this->recreateSwapChain();
+		this->createCommandBuffers();
+	}
 
-    EngineApp::~EngineApp() {
-			vkDestroyPipelineLayout(this->device.device(), this->pipelineLayout, nullptr);
-    }
+	EngineApp::~EngineApp() {
+		vkDestroyPipelineLayout(this->device.device(), this->pipelineLayout, nullptr);
+	}
 
-    void EngineApp::run() {
-			while (!this->window.shouldClose()) {
-				this->window.pollEvents();
-				this->drawFrame();
-			}
+	void EngineApp::run() {
+		while (!this->window.shouldClose()) {
+			this->window.pollEvents();
+			this->drawFrame();
+		}
 
-			vkDeviceWaitIdle(this->device.device());
-    }
+		vkDeviceWaitIdle(this->device.device());
+	}
 
 	void EngineApp::loadModels() {
 		std::vector<Vertex> vertices {
@@ -35,18 +35,18 @@ namespace nugiEngine {
 		this->model = std::make_unique<EngineModel>(this->device, vertices); 
 	}
 
-    void EngineApp::createPipelineLayout() {
-			VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
-			pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
-			pipelineLayoutInfo.setLayoutCount = 0;
-			pipelineLayoutInfo.pSetLayouts = nullptr;
-			pipelineLayoutInfo.pushConstantRangeCount = 0;
-			pipelineLayoutInfo.pPushConstantRanges = nullptr;
+	void EngineApp::createPipelineLayout() {
+		VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
+		pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
+		pipelineLayoutInfo.setLayoutCount = 0;
+		pipelineLayoutInfo.pSetLayouts = nullptr;
+		pipelineLayoutInfo.pushConstantRangeCount = 0;
+		pipelineLayoutInfo.pPushConstantRanges = nullptr;
 
-			if (vkCreatePipelineLayout(this->device.device(), &pipelineLayoutInfo, nullptr, &this->pipelineLayout) != VK_SUCCESS) {
-				throw std::runtime_error("failed to create pipeline layout!");
-			}
-    }
+		if (vkCreatePipelineLayout(this->device.device(), &pipelineLayoutInfo, nullptr, &this->pipelineLayout) != VK_SUCCESS) {
+			throw std::runtime_error("failed to create pipeline layout!");
+		}
+	}
 
 	void EngineApp::recreateSwapChain() {
 		auto extent = this->window.getExtent();
